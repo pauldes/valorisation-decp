@@ -14,6 +14,8 @@ def get_parser():
     subparser = parser.add_subparsers(dest='command')
     download = subparser.add_parser('download', help="download last version of the dataset to disk")
     download.add_argument("--rows", required=False, help="rows to download", type=int)
+    download.add_argument("--consolidated", required=False, help="download consolidated data (.json from data.gouv.fr)", action="store_true")
+    download.add_argument("--augmented", required=False, help="download augmented data (.csv from economie.gouv.fr)", action="store_true")
     load = subparser.add_parser('load', help="print a sample of the dataset and its shape")
     load.add_argument("--rows", required=False, help="rows to load", type=int)
     web = subparser.add_parser('web', help="run the reporting web app")
@@ -28,7 +30,13 @@ def main(args=None):
     parser = get_parser()
     args = parser.parse_args(args)
     if args.command == "download":
-        functions.download_data_to_disk(n_rows=args.rows)
+        if args.consolidated:
+            functions.download_consolidated_data_schema_to_disk()
+            functions.download_consolidated_data_to_disk()
+        if args.augmented:
+            functions.download_augmented_data_to_disk(n_rows=args.rows)
+        if not args.consolidated and not args.augmented:
+            print("Neither --consolidated nor --augmented was passed. Nothing will be downloaded.")
     elif args.command == "load":
         functions.print_data_shape_and_sample(n_rows=args.rows)
     elif args.command == "web":
