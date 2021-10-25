@@ -1,8 +1,9 @@
 # URL to download the data from
-BASE_URL = "http://data.economie.gouv.fr/explore/dataset/decp_augmente/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B"
-
-# Name of the local file used to store the data
-LOCAL_DATASET_PATH = "./data/decp_augmente.csv"
+BASE_URL_AUGMENTED = "http://data.economie.gouv.fr/explore/dataset/decp_augmente/download/?format=csv&timezone=Europe/Berlin&lang=fr&use_labels_for_header=true&csv_separator=%3B"
+BASE_URL_CONSOLIDATED = "https://www.data.gouv.fr/fr/datasets/r/16962018-5c31-4296-9454-5998585496d2"
+# Name of the local files used to store the data
+LOCAL_PATH_AUGMENTED = "./data/decp_augmente.csv"
+LOCAL_PATH_CONSOLIDATED = "./data/decp.json"
 
 # Column types to load the data with pandas
 DATASET_TYPES = {
@@ -74,3 +75,74 @@ DATASET_TYPES = {
     "distanceAcheteurEtablissement":float,
     "geolocCommuneEtablissement":str
 }
+
+# Column types to load the data with pandas
+COLUMNS_TO_ANALYZE_QUALITY = [
+    "idMarche",
+    "source",
+    "type",
+    "natureObjetMarche",
+    "objetMarche",
+    "codeCPV_Original",
+    "codeCPV",
+    "codeCPV_division",
+    "referenceCPV",
+    "dateNotification",
+    "anneeNotification",
+    "moisNotification",
+    "datePublicationDonnees",
+    "dureeMois",
+    "dureeMoisEstimee",
+    "dureeMoisCalculee",
+    "montant",
+    "nombreTitulaireSurMarchePresume",
+    "montantCalcule",
+    "formePrix",
+    "lieuExecutionCode",
+    "lieuExecutionTypeCode",
+    "lieuExecutionNom",
+    "codeDepartementExecution",
+    "codeRegionExecution",
+    "libelleRegionExecution",
+    "nature",
+    "accord-cadrePresume",
+    "procedure",
+    "idAcheteur",
+    "sirenAcheteurValide",
+    "nomAcheteur",
+    "codeRegionAcheteur",
+    "libelleRegionAcheteur",
+    "departementAcheteur",
+    "libelleDepartementAcheteur",
+    "codePostalAcheteur",
+    "libelleArrondissementAcheteur",
+    "codeArrondissementAcheteur",
+    "libelleCommuneAcheteur",
+    "codeCommuneAcheteur",
+    "superficieCommuneAcheteur",
+    "populationCommuneAcheteur",
+    "geolocCommuneAcheteur",
+    "typeIdentifiantEtablissement",
+    "siretEtablissement",
+    "siretEtablissementValide",
+    "sirenEtablissement",
+    "nicEtablissement",
+    "sirenEtablissementValide",
+    "categorieEtablissement",
+    "denominationSocialeEtablissement",
+    "codeRegionEtablissement",
+    "libelleRegionEtablissement",
+    "libelleDepartementEtablissement",
+    "departementEtablissement",
+    "libelleArrondissementEtablissement",
+    "codeArrondissementEtablissement",
+    "codePostalEtablissement",
+    "adresseEtablissement",
+    "communeEtablissement",
+    "codeCommuneEtablissement",
+    "codeTypeEtablissement",
+    "superficieCommuneEtablissement",
+    "populationCommuneEtablissement",
+    "distanceAcheteurEtablissement",
+    "geolocCommuneEtablissement"
+]
