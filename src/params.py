@@ -7,6 +7,7 @@ LOCAL_PATH_AUGMENTED = "./data/decp_augmente.csv"
 LOCAL_PATH_CONSOLIDATED = "./data/decp.json"
 LOCAL_PATH_CONSOLIDATED_FILTERED = "./data/decp_type_marche.json"
 LOCAL_PATH_CONSOLIDATED_SCHEMA = "./data/decp_schema.json"
+LOCAL_PATH_AUDIT_RESULTS = "./data/data_quality_audit_results.json"
 # Column types to load the data with pandas
 DATASET_TYPES = {
     "idMarche":int,

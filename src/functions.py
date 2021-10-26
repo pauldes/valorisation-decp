@@ -38,13 +38,8 @@ def download_consolidated_data_schema_to_disk():
     with open(params.LOCAL_PATH_CONSOLIDATED_SCHEMA, 'wb') as file_writer:
         file_writer.write(r.content)
 
-def load_data_from_disk(n_rows:int=None):
+def load_augmented_data_from_disk(n_rows:int=None):
     return pandas.read_csv(params.LOCAL_PATH_AUGMENTED, sep=";", index_col="id", encoding="utf8", header=0, nrows=n_rows, dtype=params.DATASET_TYPES)
-
-def print_data_shape_and_sample(n_rows:int=None):
-    dataset = load_data_from_disk(n_rows)
-    print(dataset.sample(5))
-    print(dataset.shape)
 
 def run_web_app():
     sys.argv = ['0','run','./src/webapp.py']
@@ -60,7 +55,8 @@ def get_current_year():
     return datetime.datetime.now().year
 
 def open_json(filename:str):
-    return json.loads(open(filename, 'rb').read().decode('utf-8'))
+    with open(filename, 'rb') as file_reader:
+        return json.loads(file_reader.read().decode('utf-8'))
 
 def save_json(data:dict, filename:str):
     with open(filename, "w", encoding='utf8') as file_writer:
@@ -76,16 +72,21 @@ def filter_consolidated_data():
     print(set([m.get("nature") for m in data["marches"]]))
     save_json(data, params.LOCAL_PATH_CONSOLIDATED_FILTERED)
 
-def validate_consolidated_data():
+def audit_consolidated_data_quality(n_rows:int=None):
+    filter_consolidated_data()
     schema = open_json(params.LOCAL_PATH_CONSOLIDATED_SCHEMA)
-    data = open_json(params.LOCAL_PATH_CONSOLIDATED)
-    # Get a sample
-    data["marches"] = data["marches"][:10]
+    data = open_json(params.LOCAL_PATH_CONSOLIDATED_FILTERED)
+    if n_rows is not None:
+        data["marches"] = data["marches"][:n_rows]
     results = validate_consolidated_data_against_schema(data, schema)
-    print(results)
+    save_json(results, params.LOCAL_PATH_AUDIT_RESULTS)
 
 def validate_consolidated_data_against_schema(consolidated_data:dict, consolidated_data_schema:dict, include_details:bool=False):
     """Validate the consolidated data against JSON schema.
+    This function makes assumptions on both the data structure and the schema definition:
+        - The file has a property 'marches' under which are listed the entries
+        - Each entry has a property 'uid'
+        - The schema definition includes an 'anyOf' rule where only the first one is of interest (filter_keep_any_of = 0)
 
     Args:
         consolidated_data (dict): Consolidated DECP data as a dict

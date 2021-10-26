@@ -16,8 +16,8 @@ def get_parser():
     download.add_argument("--rows", required=False, help="rows to download", type=int)
     download.add_argument("--consolidated", required=False, help="download consolidated data (.json from data.gouv.fr)", action="store_true")
     download.add_argument("--augmented", required=False, help="download augmented data (.csv from economie.gouv.fr)", action="store_true")
-    load = subparser.add_parser('load', help="print a sample of the dataset and its shape")
-    load.add_argument("--rows", required=False, help="rows to load", type=int)
+    audit = subparser.add_parser('audit', help="audit data quality and store results")
+    audit.add_argument("--rows", required=False, help="rows to audit quality for", type=int)
     web = subparser.add_parser('web', help="run the reporting web app")
     return parser
 
@@ -37,11 +37,10 @@ def main(args=None):
             functions.download_augmented_data_to_disk(n_rows=args.rows)
         if not args.consolidated and not args.augmented:
             print("Neither --consolidated nor --augmented was passed. Nothing will be downloaded.")
-    elif args.command == "load":
-        functions.print_data_shape_and_sample(n_rows=args.rows)
+    elif args.command == "audit":
+        functions.audit_consolidated_data_quality(n_rows=args.rows)
     elif args.command == "web":
         functions.run_web_app()
 
 if __name__ == '__main__':
-    #main()
-    functions.validate_consolidated_data()
+    main()
