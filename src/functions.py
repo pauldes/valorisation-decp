@@ -62,20 +62,29 @@ def save_json(data:dict, filename:str):
     with open(filename, "w", encoding='utf8') as file_writer:
         json.dump(data, file_writer, ensure_ascii=False, indent=2)
 
-def filter_consolidated_data():
-    data = open_json(params.LOCAL_PATH_CONSOLIDATED)
+def load_consolidated_data_from_disk():
+    return open_json(params.LOCAL_PATH_CONSOLIDATED)
+
+def load_consolidated_data_schema_from_disk():
+    return open_json(params.LOCAL_PATH_CONSOLIDATED_SCHEMA)
+
+def load_augmented_data_from_disk(n_rows:int=None):
+    return pandas.read_csv(params.LOCAL_PATH_AUGMENTED, sep=";", index_col="id", encoding="utf8", header=0, nrows=n_rows, dtype=params.DATASET_TYPES)
+
+def filter_augmented_data_by_type(augmented_data:dict, type_value:str):
+    data = load_consolidated_data_from_disk()
     num_total = len(data["marches"])
     print(set([m.get("_type") for m in data["marches"]]))
-    data['marches'] = [m for m in data["marches"] if m.get("_type").lower()=='marché']
+    data['marches'] = [m for m in data["marches"] if m.get("_type").lower()==type_value.lower()]
     num_filtered = len(data["marches"])
     print(num_total, ">", num_filtered)
     print(set([m.get("nature") for m in data["marches"]]))
-    save_json(data, params.LOCAL_PATH_CONSOLIDATED_FILTERED)
+    return data
 
 def audit_consolidated_data_quality(n_rows:int=None):
-    filter_consolidated_data()
-    schema = open_json(params.LOCAL_PATH_CONSOLIDATED_SCHEMA)
-    data = open_json(params.LOCAL_PATH_CONSOLIDATED_FILTERED)
+    data = load_consolidated_data_from_disk()
+    data = filter_augmented_data_by_type(data, "marché")
+    schema = load_consolidated_data_schema_from_disk()
     if n_rows is not None:
         data["marches"] = data["marches"][:n_rows]
     results = validate_consolidated_data_against_schema(data, schema)
