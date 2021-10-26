@@ -1,8 +1,10 @@
 import sys
 import datetime
+import json
 
 import requests
 import pandas
+import jsonschema
 import streamlit.cli as cli
 
 from src import params
@@ -55,3 +57,56 @@ def get_current_month():
 
 def get_current_year():
     return datetime.datetime.now().year
+
+def open_json(filename):
+    return json.loads(open(filename, 'rb').read().decode('utf-8'))
+
+def validate_consolidated_data_against_schema():
+    schema = open_json(params.LOCAL_PATH_CONSOLIDATED_SCHEMA)
+    #data = open_json(params.LOCAL_PATH_CONSOLIDATED)
+    data = open_json("./data/decp_short.json")
+    jsonschema.validate(data, schema)
+
+def print_data():
+    data = open_json(params.LOCAL_PATH_CONSOLIDATED)
+    num_total = len(data["marches"])
+    types = set([m.get("_type") for m in data["marches"]])
+    natures = set([m.get("nature") for m in data["marches"]])
+    print(types)
+    print(natures)
+    #num_marches = len([m for m in data["marches"] if ])
+    print(num_total)
+
+def full_validate_consolidated_data_against_schema():
+    schema = open_json(params.LOCAL_PATH_CONSOLIDATED_SCHEMA)
+    #data = open_json(params.LOCAL_PATH_CONSOLIDATED)
+    data = open_json("./data/decp_short.json")
+    validator = jsonschema.Draft7Validator(schema)
+    errors = validator.iter_errors(data)
+    print("\n\n")
+    #print(schema)
+    for counter, error in enumerate(errors):
+        print(f"\n===== ERROR N°{counter} :\n")
+        if error.context is None or len(error.context)==0:
+            print("MESSAGE:\n", error.message)
+            print("CONTEXT:\n", error.context)
+            print("CAUSE:\n", error.cause)
+            print("VALIDATOR:\n", error.validator)
+            print("VALIDATOR_VALUE:\n", error.validator_value)
+            print("SCHEMA_PATH:\n", error.schema_path)
+            print("PARENT:\n", error.schema_path)
+            print("INSTANCE:\n", error.instance)
+            print(len(error.context))
+        else:
+            for subcounter, suberror in enumerate(error.context):
+                print(f"\n===== SUB-ERROR N°{subcounter} :\n")
+                print("MESSAGE:\n", suberror.message)
+                print("CONTEXT:\n", suberror.context)
+                print("CAUSE:\n", suberror.cause)
+                print("VALIDATOR:\n", suberror.validator)
+                print("VALIDATOR_VALUE:\n", suberror.validator_value)
+                print("SCHEMA_PATH:\n", suberror.schema_path)
+                print("ABSOLUTE SCHEMA PATH:\n", suberror.absolute_schema_path)
+                print("PARENT:\n", suberror.schema_path)
+                print("INSTANCE:\n", suberror.instance)
+                print(len(suberror.context))

@@ -43,4 +43,7 @@ def main(args=None):
         functions.run_web_app()
 
 if __name__ == '__main__':
-    main()
+    #main()
+    #functions.full_validate_consolidated_data_against_schema()
+    #functions.validate_consolidated_data_against_schema()
+    functions.print_data()

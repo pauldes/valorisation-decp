@@ -8,6 +8,7 @@ pandas = "*"
 requests = "*"
 notebook = "*"
 streamlit = "*"
+jsonschema = "*"
 
 [dev-packages]
 
