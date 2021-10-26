@@ -17,6 +17,13 @@ st.set_page_config(
 def load_dataset(n_rows=None):
     return functions.load_data_from_disk(n_rows=n_rows)
 
+def get_url():
+    sessions = st.server.server.Server.get_current()._session_info_by_id
+    session_id_key = list(sessions.keys())[0]
+    session = sessions[session_id_key]
+    url = session.ws.request.connection.context.address[0]
+    return url
+
 # Sidebar
 
 st.sidebar.markdown("""Cette application propose une analyse de la qualité des DECP.
@@ -54,3 +61,5 @@ st.text("First 10 rows :")
 st.dataframe(dataset)
 
 st.metric("My metric", 42, 2)
+
+st.text(get_url())

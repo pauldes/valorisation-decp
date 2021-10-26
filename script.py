@@ -44,6 +44,7 @@ def main(args=None):
 
 if __name__ == '__main__':
     #main()
+    functions.full_validate_consolidated_data_against_schema()
     #functions.full_validate_consolidated_data_against_schema()
     #functions.validate_consolidated_data_against_schema()
-    functions.print_data()
+    #functions.print_data()

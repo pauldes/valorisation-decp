@@ -1,0 +1,17 @@
+id
+source
+uid
+acheteur
+_type
+nature
+objet
+codeCPV
+procedure
+lieuExecution
+dureeMois
+dateNotification
+datePublicationDonnees
+montant
+formePrix
+titulaires
+modifications

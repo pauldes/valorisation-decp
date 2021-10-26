@@ -1,6 +1,7 @@
 import sys
 import datetime
 import json
+import pprint
 
 import requests
 import pandas
@@ -61,52 +62,72 @@ def get_current_year():
 def open_json(filename):
     return json.loads(open(filename, 'rb').read().decode('utf-8'))
 
+def save_json(data, filename):
+    with open(filename, "w", encoding='utf8') as file_writer:
+        json.dump(data, file_writer, ensure_ascii=False, indent=2)
+
+def filter_consolidated_data():
+    data = open_json(params.LOCAL_PATH_CONSOLIDATED)
+    num_total = len(data["marches"])
+    print(set([m.get("_type") for m in data["marches"]]))
+    data['marches'] = [m for m in data["marches"] if m.get("_type").lower()=='marché']
+    num_filtered = len(data["marches"])
+    print(num_total, ">", num_filtered)
+    print(set([m.get("nature") for m in data["marches"]]))
+    save_json(data, params.LOCAL_PATH_CONSOLIDATED_FILTERED)
+
 def validate_consolidated_data_against_schema():
     schema = open_json(params.LOCAL_PATH_CONSOLIDATED_SCHEMA)
     #data = open_json(params.LOCAL_PATH_CONSOLIDATED)
     data = open_json("./data/decp_short.json")
     jsonschema.validate(data, schema)
 
-def print_data():
-    data = open_json(params.LOCAL_PATH_CONSOLIDATED)
-    num_total = len(data["marches"])
-    types = set([m.get("_type") for m in data["marches"]])
-    natures = set([m.get("nature") for m in data["marches"]])
-    print(types)
-    print(natures)
-    #num_marches = len([m for m in data["marches"] if ])
-    print(num_total)
-
 def full_validate_consolidated_data_against_schema():
     schema = open_json(params.LOCAL_PATH_CONSOLIDATED_SCHEMA)
     #data = open_json(params.LOCAL_PATH_CONSOLIDATED)
     data = open_json("./data/decp_short.json")
+    columns= []
+    for m in data.get("marches"):
+        print(m.keys())
+        columns += list(m.keys())
+        if isinstance(m, dict):
+            for k in m.keys():
+                columns.append(f"{m}.{k}")
+    columns = set(columns)
+    #print(columns)
+    num_uid = [m.get("uid") for m in data.get("marches")]
+    num_total = len(num_uid)
+    num_unique = len(set(num_uid))
+    if num_total != num_unique:
+        print("Warning : duplicated uids")
     validator = jsonschema.Draft7Validator(schema)
-    errors = validator.iter_errors(data)
-    print("\n\n")
-    #print(schema)
-    for counter, error in enumerate(errors):
-        print(f"\n===== ERROR N°{counter} :\n")
+    filter_keep_any_of = 0
+    errors_any_of = validator.iter_errors(data)
+    errors = {}
+    for counter, error in enumerate(errors_any_of):
+        instance_uid = error.instance.get("uid")
+        instance_suberrors = []
         if error.context is None or len(error.context)==0:
-            print("MESSAGE:\n", error.message)
-            print("CONTEXT:\n", error.context)
-            print("CAUSE:\n", error.cause)
-            print("VALIDATOR:\n", error.validator)
-            print("VALIDATOR_VALUE:\n", error.validator_value)
-            print("SCHEMA_PATH:\n", error.schema_path)
-            print("PARENT:\n", error.schema_path)
-            print("INSTANCE:\n", error.instance)
-            print(len(error.context))
+            print("Warning : hidden errors")
         else:
             for subcounter, suberror in enumerate(error.context):
-                print(f"\n===== SUB-ERROR N°{subcounter} :\n")
-                print("MESSAGE:\n", suberror.message)
-                print("CONTEXT:\n", suberror.context)
-                print("CAUSE:\n", suberror.cause)
-                print("VALIDATOR:\n", suberror.validator)
-                print("VALIDATOR_VALUE:\n", suberror.validator_value)
-                print("SCHEMA_PATH:\n", suberror.schema_path)
-                print("ABSOLUTE SCHEMA PATH:\n", suberror.absolute_schema_path)
-                print("PARENT:\n", suberror.schema_path)
-                print("INSTANCE:\n", suberror.instance)
-                print(len(suberror.context))
+                if suberror.schema_path[0] == filter_keep_any_of:
+                    if len(suberror.context)>0:
+                        print("Warning : hidden suberrors")
+                    error_details = {
+                        "message":suberror.message,
+                        "validator":suberror.validator,
+                    }
+                    instance_suberrors.append(error_details)
+        errors[instance_uid] = instance_suberrors
+    num_invalid_entries = len(errors)
+    num_valid_entries = num_total - num_invalid_entries
+    share_valid_entries = num_valid_entries / num_total
+    share_valid_entries = round(share_valid_entries, 2)
+    results = {
+        "num_invalid_entries":num_invalid_entries,
+        "num_valid_entries":num_valid_entries,
+        "share_valid_entries":share_valid_entries,
+        "details_per_uid":errors
+    }
+    print(results)

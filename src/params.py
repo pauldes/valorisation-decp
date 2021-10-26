@@ -5,6 +5,7 @@ URL_CONSOLIDATED_SCHEMA = "https://schema.data.gouv.fr/schemas/139bercy/format-c
 # Name of the local files used to store the data
 LOCAL_PATH_AUGMENTED = "./data/decp_augmente.csv"
 LOCAL_PATH_CONSOLIDATED = "./data/decp.json"
+LOCAL_PATH_CONSOLIDATED_FILTERED = "./data/decp_type_marche.json"
 LOCAL_PATH_CONSOLIDATED_SCHEMA = "./data/decp_schema.json"
 # Column types to load the data with pandas
 DATASET_TYPES = {
