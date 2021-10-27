@@ -9,19 +9,24 @@ Installer les dépendances  :
 pipenv install
 ```
 
-Télécharger le jeu de donnnées DECP (pré-requis aux autres commandes) :
+Télécharger le jeu de donnnées DECP augmmenté :
 ```shell
-pipenv run python script.py download
+pipenv run python script.py download --augmented
 ```
 
-Télécharger uniquement les 100 premières lignes du jeu de donnnées DECP :
+Télécharger uniquement les 100 premières lignes du jeu de donnnées DECP augmenté :
 ```shell
-pipenv run python script.py download --rows 100
+pipenv run python script.py download --augmented --rows 100
 ```
 
-Afficher un échantillon du jeu de donnnées et sa taille :
+Télécharger le jeu de données DECP consolidé (pré-requis à l'analyse de données):
 ```shell
-pipenv run python script.py load
+pipenv run python script.py download --consolidated
+```
+
+Mener l'analyse de qualité (pré-requis à l'application Web) :
+```shell
+pipenv run python script.py audit
 ```
 
 Lancer l'application Web d'analyse de qualité :

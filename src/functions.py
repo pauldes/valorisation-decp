@@ -81,6 +81,12 @@ def filter_augmented_data_by_type(augmented_data:dict, type_value:str):
     print(set([m.get("nature") for m in data["marches"]]))
     return data
 
+def save_audit_results_to_disk(results):
+    save_json(results, params.LOCAL_PATH_AUDIT_RESULTS)
+
+def load_audit_results_from_disk(results):
+    open_json(params.LOCAL_PATH_AUDIT_RESULTS)
+
 def audit_consolidated_data_quality(n_rows:int=None):
     data = load_consolidated_data_from_disk()
     data = filter_augmented_data_by_type(data, "marché")
@@ -88,7 +94,7 @@ def audit_consolidated_data_quality(n_rows:int=None):
     if n_rows is not None:
         data["marches"] = data["marches"][:n_rows]
     results = validate_consolidated_data_against_schema(data, schema)
-    save_json(results, params.LOCAL_PATH_AUDIT_RESULTS)
+    save_audit_results_to_disk(results)
 
 def validate_consolidated_data_against_schema(consolidated_data:dict, consolidated_data_schema:dict, include_details:bool=False):
     """Validate the consolidated data against JSON schema.
