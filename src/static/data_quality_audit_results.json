@@ -1,0 +1,11 @@
+{
+  "num_invalid_entries": 14,
+  "num_valid_entries": 86,
+  "share_valid_entries": 0.86,
+  "num_errors_per_validator": {
+    "minLength": 1,
+    "pattern": 1,
+    "required": 11,
+    "enum": 9
+  }
+}
