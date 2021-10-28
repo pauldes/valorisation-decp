@@ -14,8 +14,16 @@ st.set_page_config(
 # Functions
 
 @st.cache
-def load_dataset():
+def cached__load_dataset():
     return functions.load_audit_results_from_disk()
+
+@st.cache
+def cached__get_audit_results_from_url(url):
+    return functions.get_audit_results_from_url(url)
+
+@st.cache
+def cached__get_audit_results_list(year, month, day):
+    return functions.get_audit_results_list()
 
 def get_url():
     sessions = st.server.server.Server.get_current()._session_info_by_id
@@ -24,35 +32,37 @@ def get_url():
     url = session.ws.request.connection.context.address[0]
     return url
 
+day = functions.get_current_day()
+month = functions.get_current_month()
+year =  functions.get_current_year()
+
 # Sidebar
 
 st.sidebar.markdown("""Cette application propose une analyse de la qualité des DECP.
     """)
 
-dataset = load_dataset()
-# total_rows = dataset.shape[0]
+audit_results_list = cached__get_audit_results_list(year, month, day)
 
 st.sidebar.subheader("Paramétrage")
 
-# sources = dataset["source"].unique()
-# percent_rows = st.sidebar.slider("Pourcentage de lignes chargées", min_value=10, max_value=100, format="%d")
 selected_source = st.sidebar.selectbox("Source à analyser", ["Source 1", "Source 2"])
-# selected_num_rows = int(total_rows * percent_rows / 100)
-# dataset = dataset.sample(selected_num_rows)
-# dataset = dataset[dataset.source==selected_source]
 
-#st.sidebar.subheader("Evolution historique")
 sidebar_column_1, sidebar_column_2 = st.sidebar.columns(2)
 with sidebar_column_1:
-    compare_with_n = st.number_input("Nombre de périodes", min_value=1, step=1)
+    current_created_at = st.selectbox("Date courante", audit_results_list.keys())
 with sidebar_column_2:
-    compare_with_element = st.radio("Type de période", ["Année", "Mois", "Jour"])
+    old_created_at = st.selectbox("Date à comparer", audit_results_list.keys())
+
+current_url = audit_results_list.get(current_created_at)
+old_url = audit_results_list.get(old_created_at)
+current_results = cached__get_audit_results_from_url(current_url)
+old_results = cached__get_audit_results_from_url(old_url)
 
 st.sidebar.subheader("Plus d'informations")
 
 # Main page
 
-st.image("./src/static/logo-economie-finances-relance.png", width=150)
+st.image("./src/static/logo-economie-finances-relance.png", width=300)
 st.title("Qualité des Données Essentielles de la Commande Publique (DECP)")
 
 st.text(f"Source : {selected_source}")

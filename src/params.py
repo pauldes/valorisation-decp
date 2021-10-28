@@ -6,7 +6,7 @@ URL_CONSOLIDATED_SCHEMA = "https://schema.data.gouv.fr/schemas/139bercy/format-c
 LOCAL_PATH_AUGMENTED = "./data/decp_augmente.csv"
 LOCAL_PATH_CONSOLIDATED = "./data/decp.json"
 LOCAL_PATH_CONSOLIDATED_SCHEMA = "./data/decp_schema.json"
-LOCAL_PATH_AUDIT_RESULTS = "./src/static/data_quality_audit_results.json"
+LOCAL_PATH_AUDIT_RESULTS = "./data/data_quality_audit_results.json"
 # Column types to load the data with pandas
 DATASET_TYPES = {
     "idMarche":int,
@@ -101,3 +101,7 @@ COLUMNS_TO_ANALYZE_QUALITY = [
     "type",
     "typeIdentifiantEtablissement"
 ]
+
+# GitHub repo where the project is
+GITHUB_REPO = "pauldes/valorisation-decp"
+AUDIT_RESULTS_ARTIFACT_NAME = "data_quality_audit_results.json"

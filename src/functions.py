@@ -42,7 +42,7 @@ def load_augmented_data_from_disk(n_rows:int=None):
     return pandas.read_csv(params.LOCAL_PATH_AUGMENTED, sep=";", index_col="id", encoding="utf8", header=0, nrows=n_rows, dtype=params.DATASET_TYPES)
 
 def run_web_app():
-    sys.argv = ['0','run','./src/webapp.py']
+    sys.argv = ['0','run','./streamlit_app.py']
     cli.main()
 
 def get_current_day():
@@ -156,3 +156,32 @@ def validate_consolidated_data_against_schema(consolidated_data:dict, consolidat
     if include_details:
         results["error_details_per_uid"] = error_details_per_uid
     return results
+
+def get_audit_results_list():
+    """ Returns a list of available audit results stored as artifacts.
+
+    Returns:
+        dict: {artifact url : artifact creation date}
+    """
+    github_repo = params.GITHUB_REPO
+    url = f"https://api.github.com/repos/{github_repo}/actions/artifacts"
+    response = requests.get(url)
+    if response.status_code==403:
+        raise Exception(f"Error 403 when requesting {url} : {response.content}")
+    artifacts = response.json()
+    num_artifacts = artifacts.get("total_count")
+    print(f"{num_artifacts} artifacts available")
+    audit_results_artifacts = [
+        a for a in artifacts.get("artifacts") 
+            if a.get("name")==params.AUDIT_RESULTS_ARTIFACT_NAME
+            and a.get("expired")==False
+        ]
+    print(f"{num_artifacts} audit results available")
+    audit_results_artifacts_short = {}
+    for a in audit_results_artifacts:
+        audit_results_artifacts_short[a.get("created_at")] = a.get("url")
+    return audit_results_artifacts_short
+
+def get_audit_results_from_url(url):
+    audit_results = requests.get(url).json()
+    return audit_results
