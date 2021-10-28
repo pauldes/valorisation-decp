@@ -1,7 +1,7 @@
 
 import streamlit as st
 
-import functions
+from src import functions
 
 # Page properties
 st.set_page_config(
