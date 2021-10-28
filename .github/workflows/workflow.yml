@@ -52,3 +52,6 @@ jobs:
       - name: Run the CLI command to download consolidated data
         run: |
           pipenv run python cli.py download --consolidated
+      - name: Run the quality audit on first 10 rows
+        run: |
+          pipenv run python cli.py audit --rows 10
