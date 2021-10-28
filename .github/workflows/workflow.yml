@@ -55,3 +55,9 @@ jobs:
       - name: Run the quality audit on first 10 rows
         run: |
           pipenv run python cli.py audit --rows 10
+      - name: Upload audit results as artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: data_quality_audit_results.json
+          path: ./static/data_quality_audit_results.json
+          retention-days: 5
