@@ -7,7 +7,7 @@ from src import functions
 st.set_page_config(
     page_title="Qualité des DECP",
     page_icon="./src/static/favicon.ico",
-    layout="centered",
+    layout="wide",
     initial_sidebar_state="auto",
 )
 
@@ -93,7 +93,8 @@ singularite_container = details_col_1.container()
 singularite_container.markdown("**Singularité**")
 singularite_container.info(f"""
     **{42}** identifiants non uniques
-    \n\n
+    """)
+singularite_container.info(f"""
     **{42}** lignes dupliquées
     """)
 
@@ -101,15 +102,17 @@ validite_container = details_col_1.container()
 validite_container.markdown("**Validité**")
 validite_container.info(f"""
     **{42}** jours depuis la dernière publication
-    \n\n
-    **{42}** écart moyen entre notification et publication
+    """)
+validite_container.info(f"""
+    **{42}** jours entre notification et publication (moyenne)
     """)
 
 completude_container = details_col_2.container()
 completude_container.markdown("**Complétude**")
 completude_container.info(f"""
     **{42}** données manquantes
-    \n\n
+    """)
+completude_container.info(f"""
     **{42}** valeurs non renseignées
     """)
 
@@ -117,22 +120,25 @@ conformite_container = details_col_2.container()
 conformite_container.markdown("**Conformité**")
 conformite_container.info(f"""
     **{42}** caractères mal encodés ou illisibles
-    \n\n
-    **{42}** formats ou valeurs invalides
+    """)
+conformite_container.info(f"""
+    **{42}** formats non respectés ou valeurs invalides
     """)
 
 exactitude_container = details_col_3.container()
 exactitude_container.markdown("**Exactitude**")
 exactitude_container.info(f"""
     **{42}** valeurs aberrantes
-    \n\n
+    """)
+exactitude_container.info(f"""
     **{42}** valeurs extrêmes
     """)
 
 coherence_container = details_col_3.container()
 coherence_container.markdown("**Cohérence**")
 coherence_container.info(f"""
-    **{42}** incohérences temporelles
-    \n\n
-    **{42}** incohérences montant/durée
+    **{42}** incohérences temporelles entre notification et publication
+    """)
+coherence_container.info(f"""
+    **{42}** incohérences entre montant et durée
     """)
