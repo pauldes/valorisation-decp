@@ -20,7 +20,7 @@ def cached__load_dataset():
 @st.cache
 def cached__get_audit_results_from_url(url):
     return functions.get_audit_results_from_url(url)
-
+    
 @st.cache
 def cached__get_audit_results_list(year, month, day):
     return functions.get_audit_results_list()
@@ -49,9 +49,9 @@ selected_source = st.sidebar.selectbox("Source à analyser", ["Source 1", "Sourc
 
 sidebar_column_1, sidebar_column_2 = st.sidebar.columns(2)
 with sidebar_column_1:
-    current_created_at = st.selectbox("Date courante", audit_results_list.keys())
+    current_created_at = st.selectbox("Date courante", audit_results_list.keys(), index=0)
 with sidebar_column_2:
-    old_created_at = st.selectbox("Date à comparer", audit_results_list.keys())
+    old_created_at = st.selectbox("Date à comparer", audit_results_list.keys(), index=len(audit_results_list)-1)
 
 current_url = audit_results_list.get(current_created_at)
 old_url = audit_results_list.get(old_created_at)

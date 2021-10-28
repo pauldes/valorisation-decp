@@ -169,6 +169,7 @@ def get_audit_results_list():
     if response.status_code==403:
         raise Exception(f"Error 403 when requesting {url} : {response.content}")
     artifacts = response.json()
+    #artifacts = open_json("./data/artifacts.json") #for debugging
     num_artifacts = artifacts.get("total_count")
     print(f"{num_artifacts} artifacts available")
     audit_results_artifacts = [
@@ -180,7 +181,21 @@ def get_audit_results_list():
     audit_results_artifacts_short = {}
     for a in audit_results_artifacts:
         audit_results_artifacts_short[a.get("created_at")] = a.get("url")
+    audit_results_artifacts_short = keep_one_entry_per_date(audit_results_artifacts_short)
+    audit_results_artifacts_short = sorted(audit_results_artifacts_short)
     return audit_results_artifacts_short
+
+def keep_one_entry_per_date(audit_results_artifacts_short):
+    audit_results_artifacts = {}
+    print("starting")
+    for key,value in audit_results_artifacts_short.items():
+        date = key[:10]
+        print(date)
+        if date in audit_results_artifacts_short:
+            pass
+        else:
+            audit_results_artifacts[date] = value
+    return audit_results_artifacts
 
 def get_audit_results_from_url(url):
     audit_results = requests.get(url).json()
