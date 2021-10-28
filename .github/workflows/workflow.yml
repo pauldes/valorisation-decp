@@ -36,7 +36,7 @@ jobs:
         run: |
           python -m pip install --upgrade pipenv
           pipenv install --deploy
-  download-consolidated-data:
+  download-data-and-audit-quality:
     runs-on: ubuntu-latest
     steps:
       - name: Check out to repo
