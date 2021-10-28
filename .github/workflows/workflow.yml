@@ -45,7 +45,7 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.8
-      - name: Make sure the packages are properly locked in Pipfile.lock
+      - name: Install dependencies from Pipfile
         run: |
           python -m pip install --upgrade pipenv
           pipenv install --deploy
