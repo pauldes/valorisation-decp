@@ -182,20 +182,19 @@ def get_audit_results_list():
     for a in audit_results_artifacts:
         audit_results_artifacts_short[a.get("created_at")] = a.get("url")
     audit_results_artifacts_short = keep_one_entry_per_date(audit_results_artifacts_short)
-    audit_results_artifacts_short = sorted(audit_results_artifacts_short)
+    audit_results_artifacts_short = dict(sorted(audit_results_artifacts_short.items()))
     return audit_results_artifacts_short
 
-def keep_one_entry_per_date(audit_results_artifacts_short):
-    audit_results_artifacts = {}
-    print("starting")
-    for key,value in audit_results_artifacts_short.items():
+def keep_one_entry_per_date(artifacts_dict):
+    artifacts_dict_pruned = dict()
+    for key,value in artifacts_dict.items():
         date = key[:10]
-        print(date)
-        if date in audit_results_artifacts_short:
+        print(key, date, value)
+        if date in artifacts_dict_pruned.keys():
             pass
         else:
-            audit_results_artifacts[date] = value
-    return audit_results_artifacts
+            artifacts_dict_pruned[date] = value
+    return artifacts_dict_pruned
 
 def get_audit_results_from_url(url):
     audit_results = requests.get(url).json()
