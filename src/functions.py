@@ -84,7 +84,7 @@ def filter_augmented_data_by_type(augmented_data:dict, type_value:str):
 def save_audit_results_to_disk(results):
     save_json(results, params.LOCAL_PATH_AUDIT_RESULTS)
 
-def load_audit_results_from_disk(results):
+def load_audit_results_from_disk():
     open_json(params.LOCAL_PATH_AUDIT_RESULTS)
 
 def audit_consolidated_data_quality(n_rows:int=None):
