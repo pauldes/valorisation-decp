@@ -38,4 +38,4 @@ web:
   texte_haut_barre_laterale: Cette application propose une analyse de la qualité des DECP.
   texte_bas_barre_laterale: Consultez la documentation pour plus d'information.
   titre: Qualité des Données Essentielles de la Commande Publique (DECP)
-  projet_github: 139bercy/decp-qualite
+  projet_github: pauldes/valorisation-decp
