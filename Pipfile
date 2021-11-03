@@ -4,13 +4,21 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pandas = "*"
 requests = "*"
-notebook = "*"
 streamlit = "*"
 jsonschema = "*"
+pyyaml = "*"
+munch = "*"
+qualite-decp = {editable = true, path = "./qualite_decp"}
+pandas = "*"
 
 [dev-packages]
+pylint = "*"
+black = "*"
+pre-commit = "*"
 
 [requires]
 python_version = "3.8"
+
+[pipenv]
+allow_prereleases = true
